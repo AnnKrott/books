@@ -37,6 +37,11 @@ export async function POST(req: Request) {
         fromDatabase: false,
     }))
 
-    // Никакой записи в БД — только чтение
-    return NextResponse.json([...formattedDbBooks, ...googleBooks])
+    const dbTitles = new Set(dbBooks.map(book => book.title.toLowerCase()))
+
+    const filteredGoogleBooks = googleBooks.filter(book =>
+        !dbTitles.has(book.volumeInfo.title.toLowerCase())
+    )
+
+    return NextResponse.json([...formattedDbBooks, ...filteredGoogleBooks])
 }

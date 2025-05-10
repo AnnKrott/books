@@ -50,72 +50,77 @@ export default function BookSearch() {
     }
 
     return (
-        <>
-            <form onSubmit={searchBooks} className="space-y-4 mb-8">
-                <input
-                    type="text"
-                    placeholder="Название книги"
-                    value={query}
-                    onChange={(e) => setQuery(e.target.value)}
-                    className="border p-2 w-full"
-                />
-                <button
-                    className="bg-red-400 text-white px-4 py-2 rounded hover:bg-red-500"
-                    disabled={loading}
-                >
-                    {loading ? 'Поиск...' : 'Найти книги'}
-                </button>
-            </form>
+        <div className="grid grid-cols-2 gap-6 h-screen">
+            {/* Левая часть — поиск и список книг */}
+            <div className="overflow-y-auto p-4">
+                <h1 className="text-xl font-bold mb-6">Поиск книг</h1>
+                <form onSubmit={searchBooks} className="space-y-4 mb-8">
+                    <input
+                        type="text"
+                        placeholder="Название книги"
+                        value={query}
+                        onChange={(e) => setQuery(e.target.value)}
+                        className="border p-2 w-full"
+                    />
+                    <button
+                        className="bg-red-400 text-white px-4 py-2 rounded hover:bg-red-500"
+                        disabled={loading}
+                    >
+                        {loading ? 'Поиск...' : 'Найти книги'}
+                    </button>
+                </form>
 
-            <ul className="space-y-4 mb-12">
-                {books.map((book) => (
-                    <li key={book.id} className="border p-4 rounded">
-                        <h3 className="font-bold text-lg">{book.volumeInfo.title}</h3>
-                        <p className="text-sm text-gray-600">{book.volumeInfo.authors?.join(', ')}</p>
-                        <p className="text-sm">{book.volumeInfo.description?.slice(0, 150)}...</p>
-                        {book.volumeInfo.imageLinks?.thumbnail && (
-                            <img
-                                src={book.volumeInfo.imageLinks.thumbnail}
-                                alt={book.volumeInfo.title}
-                                className="mt-2"
-                                width={100}
-                            />
-                        )}
+                <ul className="space-y-4 mb-12">
+                    {books.map((book) => (
+                        <li key={book.id} className="border p-4 rounded">
+                            <h3 className="font-bold text-lg">{book.volumeInfo.title}</h3>
+                            <p className="text-sm text-gray-600">{book.volumeInfo.authors?.join(', ')}</p>
+                            <p className="text-sm">{book.volumeInfo.description?.slice(0, 150)}...</p>
+                            {book.volumeInfo.imageLinks?.thumbnail && (
+                                <img
+                                    src={book.volumeInfo.imageLinks.thumbnail}
+                                    alt={book.volumeInfo.title}
+                                    className="mt-2"
+                                    width={100}
+                                />
+                            )}
 
-                        {!book.fromDatabase && (
-                            <button
-                                onClick={async () => {
-                                    const payload = {
-                                        title: book.volumeInfo.title,
-                                        authors: book.volumeInfo.authors.join(', '),
-                                        description: book.volumeInfo.description,
-                                        thumbnail: book.volumeInfo.imageLinks?.thumbnail,
-                                    }
+                            {!book.fromDatabase && (
+                                <button
+                                    onClick={async () => {
+                                        const payload = {
+                                            title: book.volumeInfo.title,
+                                            authors: book.volumeInfo.authors.join(', '),
+                                            description: book.volumeInfo.description,
+                                            thumbnail: book.volumeInfo.imageLinks?.thumbnail,
+                                        }
 
-                                    const res = await fetch('/api/save-book', {
-                                        method: 'POST',
-                                        headers: { 'Content-Type': 'application/json' },
-                                        body: JSON.stringify(payload),
-                                    })
+                                        const res = await fetch('/api/save-book', {
+                                            method: 'POST',
+                                            headers: { 'Content-Type': 'application/json' },
+                                            body: JSON.stringify(payload),
+                                        })
 
-                                    if (res.ok) {
-                                        alert('Книга добавлена в Мои книги!')
-                                    } else {
-                                        alert('Ошибка при сохранении книги')
-                                    }
-                                }}
-                                className="mt-2 text-sm bg-green-600 text-white px-3 py-1 rounded"
-                            >
-                                Добавить в мои книги
-                            </button>
-                        )}
-                    </li>
-                ))}
-            </ul>
+                                        if (res.ok) {
+                                            alert('Книга добавлена в Мои книги!')
+                                        } else {
+                                            alert('Ошибка при сохранении книги')
+                                        }
+                                    }}
+                                    className="mt-2 text-sm bg-green-600 text-white px-3 py-1 rounded"
+                                >
+                                    Добавить в мои книги
+                                </button>
+                            )}
+                        </li>
+                    ))}
+                </ul>
+            </div>
 
-            <div className="border-t pt-6">
-                <h2 className="text-xl font-semibold mb-2">Не нашли книгу? Добавьте вручную</h2>
-                <div className="space-y-2">
+            {/* Правая часть — форма добавления */}
+            <div className="sticky top-0 self-start p-4 h-fit">
+                <h2 className="text-xl font-semibold mb-6">Не нашли книгу? Добавьте вручную</h2>
+                <div className="space-y-4">
                     <input
                         type="text"
                         placeholder="Название"
@@ -130,12 +135,6 @@ export default function BookSearch() {
                         onChange={(e) => setManual({ ...manual, authors: e.target.value })}
                         className="border p-2 w-full"
                     />
-                    <textarea
-                        placeholder="Описание"
-                        value={manual.description}
-                        onChange={(e) => setManual({ ...manual, description: e.target.value })}
-                        className="border p-2 w-full"
-                    />
                     <input
                         type="text"
                         placeholder="Ссылка на обложку"
@@ -143,15 +142,22 @@ export default function BookSearch() {
                         onChange={(e) => setManual({ ...manual, thumbnail: e.target.value })}
                         className="border p-2 w-full"
                     />
+                    <textarea
+                        placeholder="Описание"
+                        value={manual.description}
+                        onChange={(e) => setManual({ ...manual, description: e.target.value })}
+                        className="border p-2 w-full"
+                    />
                     <button
                         onClick={handleManualAdd}
                         type="button"
-                        className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                        className="bg-red-400 text-white px-4 py-2 rounded hover:bg-red-500"
                     >
                         Добавить вручную
                     </button>
                 </div>
             </div>
-        </>
+        </div>
     )
+
 }
