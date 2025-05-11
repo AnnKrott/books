@@ -28,3 +28,7 @@ body {
 .book-img {
   height: 161px;
 }
+
+button {
+  cursor: pointer;
+}

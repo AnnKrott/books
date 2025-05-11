@@ -27,7 +27,7 @@ export default function RootLayout({
     <html lang="ru">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`} >
         <Header />
-        <main className="relative top-18">
+        <main className="relative top-18 container container-2xl mx-auto">
           {children}
         </main>
       </body>

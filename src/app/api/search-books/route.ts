@@ -5,6 +5,10 @@ import type { UnifiedBook } from '@/app/types/book'
 export async function POST(req: Request) {
     const { query } = await req.json()
 
+    if (!query || query.trim() === '') {
+        return NextResponse.json([])
+    }
+
     // Поиск в базе данных
     const allBooks = await prisma.book.findMany()
     const dbBooks = allBooks.filter(book =>
