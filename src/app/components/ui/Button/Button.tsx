@@ -2,10 +2,10 @@
 
 export default function Button({text, loading = false, onClick, color}) {
     const colorClasses: Record<string, string> = {
-        red: 'border-red-400 text-red-400 hover:bg-red-400',
-        green: 'border-green-500 text-green-500 hover:bg-green-500',
-        blue: 'border-blue-400 text-blue-400 hover:bg-blue-400',
-        gray: 'border-gray-400 text-gray-400 hover:bg-gray-400',
+        red: 'bg-red-400 text-white hover:bg-red-500',
+        green: 'bg-green-500 text-white hover:bg-green-600',
+        blue: 'bg-blue-400 text-white hover:bg-blue-500',
+        gray: 'bg-gray-400 text-white hover:bg-gray-500',
     }
 
     const selectedClasses = colorClasses[color] || colorClasses.red

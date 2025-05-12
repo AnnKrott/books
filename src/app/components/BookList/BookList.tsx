@@ -1,6 +1,8 @@
 'use client'
 
 import Button from "@/app/components/ui/Button/Button";
+import toast from "react-hot-toast";
+import { cleanImageUrl, isUrl } from "@/app/utils/imageUtils";
 
 export default function BookList({books, setBooks, loading}) {
     const handleDelete = async (bookId: string) => {
@@ -11,13 +13,24 @@ export default function BookList({books, setBooks, loading}) {
             body: JSON.stringify({ id: Number(cleanId) }),
         })
         if (res.ok) {
-            alert('Книга удалена из Моих книг!')
-            setBooks(books.filter((b) => b.id !== bookId))
+            toast.success('Книга удалена из Моих книг!')
+            setBooks((prev) =>
+                prev.map((book) =>
+                    book.id === bookId
+                        ? {
+                            ...book,
+                            id: `google-${cleanId}`,
+                            fromDatabase: false,
+                        }
+                        : book
+                )
+            )
         } else {
             const error = await res.json()
-            alert(`Ошибка при удалении книги: ${error.error}`)
+            toast.error(`Ошибка при удалении книги: ${error.error}`)
         }
     }
+
 
     const handleAdd = async (book) => {
         const payload = {
@@ -32,32 +45,30 @@ export default function BookList({books, setBooks, loading}) {
             body: JSON.stringify(payload),
         })
         if (res.ok) {
-            alert('Книга добавлена в Мои книги!')
+            toast.success('Книга добавлена в Мои книги!')
+
+            const saved = await res.json()
+            setBooks((prev) =>
+                prev.map((b) =>
+                    b.id === book.id
+                        ? {
+                            ...b,
+                            id: `db-${saved.id}`,
+                            fromDatabase: true,
+                        }
+                        : b
+                )
+            )
         } else {
             const error = await res.json()
-            alert(`Ошибка при сохранении книги: ${error.error}`)
-        }
-    }
-
-    const cleanImageUrl = (url: string) => {
-        const u = new URL(url)
-        u.searchParams.delete('edge')
-        return u.toString()
-    }
-
-    const isUrl = (str: string): boolean => {
-        try {
-            new URL(str)
-            return true
-        } catch (_) {
-            return false
+            toast.error(`Ошибка при сохранении книги: ${error.error}`)
         }
     }
 
    return (
        <ul className="space-y-4 mb-12 grid grid-cols-2 gap-4">
            {books.map((book) => (
-               <li key={book.id} className="p-4 rounded-2xl bg-gray-100">
+               <li key={book.id} className="flex flex-col justify-between p-4 rounded-2xl bg-gray-100">
                    <div className="flex gap-4 mb-4">
                        {book.volumeInfo.imageLinks?.thumbnail && (
                            <img

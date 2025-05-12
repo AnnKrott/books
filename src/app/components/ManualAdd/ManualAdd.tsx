@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Input from "@/app/components/ui/Input/Input";
 import Button from "@/app/components/ui/Button/Button";
+import toast from "react-hot-toast";
 
 export default function ManualAdd({books, setBooks}) {
     const [manual, setManual] = useState({ title: '', authors: '', description: '', thumbnail: '' })
@@ -13,7 +14,7 @@ export default function ManualAdd({books, setBooks}) {
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(manual),
         })
-        alert('Книга добавлена вручную!')
+        toast.success('Книга добавлена вручную!');
 
         setBooks([
             ...books,

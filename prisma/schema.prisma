@@ -9,10 +9,12 @@ datasource db {
 }
 
 model Book {
-  id          Int      @id @default(autoincrement())
-  title       String
-  authors     String
-  description String?
-  thumbnail   String?
-  createdAt   DateTime @default(now())
+  id             String    @id @default(uuid())
+  title          String
+  authors        String
+  description    String?
+  thumbnail      String?
+  elapsedTime    Int?      @default(0)
+  timerStartedAt DateTime?
+  createdAt      DateTime  @default(now())
 }

@@ -9,5 +9,6 @@ export interface UnifiedBook {
         }
     }
     fromDatabase: boolean
+    timerStartedAt?: string | null;
 }
 

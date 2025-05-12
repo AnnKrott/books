@@ -19,7 +19,13 @@ export default function MyBooks() {
         const fetchBooks = async () => {
             const res = await fetch('/api/get-books')
             const data = await res.json()
-            setBooks(data)
+
+            const formatted = data.map((book: Book) => ({
+                ...book,
+                elapsedTime: book.elapsedTime ?? 0,
+            }))
+
+            setBooks(formatted)
             setLoading(false)
         }
 
