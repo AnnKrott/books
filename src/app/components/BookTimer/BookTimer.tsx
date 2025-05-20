@@ -73,16 +73,16 @@ export default function BookTimer({ bookId, initialTime, timerStartedAt, loading
     };
 
     return (
-        <div>
+        <div className="relative pt-8">
             {running ? (
-                <>
-                    <p>Таймер: {formatTime(time)}</p>
+                <div>
+                    <p className="absolute top-0">Таймер: {formatTime(time)}</p>
                     <Button
                         loading={loading}
                         onClick={handleStop}
                         text="Остановить таймер"
                     />
-                </>
+                </div>
             ) : (
                 <Button
                     loading={loading}

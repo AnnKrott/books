@@ -26,7 +26,7 @@ export default function MyBooksList({ books, setBooks, loading }) {
     };
 
     return (
-        <ul className="grid grid-cols-3 gap-4">
+        <ul className="grid grid-cols-2 gap-4">
             {books.map((book) => (
                 <li key={book.id} className="flex flex-col justify-between gap-2 p-4 rounded-2xl bg-gray-100">
                     <div className="flex gap-4 mb-4">
@@ -48,7 +48,7 @@ export default function MyBooksList({ books, setBooks, loading }) {
                         </div>
                     </div>
 
-                    <div className="flex justify-between items-center">
+                    <div className="relative pt-8 flex justify-between items-center">
                         <BookTimer
                             bookId={book.id}
                             initialTime={book.elapsedTime ?? 0}
@@ -61,11 +61,13 @@ export default function MyBooksList({ books, setBooks, loading }) {
                             }}
                         />
 
-                        <Button
-                            loading={loading}
-                            onClick={() => handleDelete(book.id)}
-                            text="Удалить"
-                        />
+                        <div className="flex justify-between items-center">
+                            <Button
+                                loading={loading}
+                                onClick={() => handleDelete(book.id)}
+                                text="Удалить"
+                            />
+                        </div>
                     </div>
                 </li>
             ))}
