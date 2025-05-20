@@ -73,7 +73,7 @@ export default function BookTimer({ bookId, initialTime, timerStartedAt, loading
     };
 
     return (
-        <div className="relative pt-8">
+        <div>
             {running ? (
                 <div>
                     <p className="absolute top-0">Таймер: {formatTime(time)}</p>
