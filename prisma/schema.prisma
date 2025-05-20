@@ -9,12 +9,21 @@ datasource db {
 }
 
 model Book {
-  id             String    @id @default(uuid())
+  id             String         @id @default(uuid())
   title          String
   authors        String
   description    String?
   thumbnail      String?
-  elapsedTime    Int?      @default(0)
+  elapsedTime    Int?           @default(0)
   timerStartedAt DateTime?
-  createdAt      DateTime  @default(now())
+  createdAt      DateTime       @default(now())
+  sessions       TimerSession[] @relation("BookSessions")
+}
+
+model TimerSession {
+  id        String   @id @default(cuid())
+  duration  Int // seconds
+  createdAt DateTime @default(now())
+  book      Book     @relation("BookSessions", fields: [bookId], references: [id])
+  bookId    String
 }

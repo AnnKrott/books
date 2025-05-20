@@ -28,7 +28,10 @@ export default function BookTimer({ bookId, initialTime, timerStartedAt, loading
     }, [timerStartedAt]);
 
     useEffect(() => {
-        if (!running) return;
+        if (!running) {
+            setTime(0);
+            return
+        };
 
         const interval = setInterval(() => {
             setTime((prev) => prev + 1); // Увеличиваем только прошедшее время
@@ -65,6 +68,7 @@ export default function BookTimer({ bookId, initialTime, timerStartedAt, loading
             const { book } = await res.json();
             toast.success(`Таймер остановлен! Прошло ${formatTime(time)}.`);
             setRunning(false);
+            setTime(0);
             onTimerStopped(book);
         } else {
             const error = await res.json();
